@@ -4,9 +4,8 @@ Password saver.
 - PyQt5
 - PyQt5-tools
 - pyperclip
-
-> pip install pyqt5
-><br>
-> pip install pyqt5-tools
-><br>
-> pip install pyperclip
+```
+pip install pyqt5
+pip install pyqt5-tools
+pip install pyperclip
+```
