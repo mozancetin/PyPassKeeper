@@ -355,8 +355,8 @@ class ShowPasswordsWindow(QtWidgets.QWidget):
 
         self.copyButton.clicked.connect(self.CopyPassword)
 
-        self.setMinimumHeight(200)
-        self.setMaximumHeight(200)
+        self.setMinimumHeight(170)
+        self.setMaximumHeight(170)
         self.setMinimumWidth(300)
         self.setMaximumWidth(300)
 
