@@ -10,5 +10,5 @@ pip install pyqt5-tools
 pip install pyperclip
 ```
 # Preview
-![](image.png)
 ![](image2.png)
+![](image.png)
