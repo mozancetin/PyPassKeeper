@@ -316,6 +316,10 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             self.passList.repaint()
         else:
             return False
+        
+    def closeEvent(self, event):
+        self.mainWindow = MainWindow(self.user)
+        self.mainWindow.show()
 
 class ShowPasswordsWindow(QtWidgets.QWidget):
 
