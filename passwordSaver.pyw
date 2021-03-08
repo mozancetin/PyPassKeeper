@@ -19,12 +19,12 @@ class UserControlWindow(QtWidgets.QWidget):
     def ControlUI(self):
         self.warning = QtWidgets.QLabel("")
         self.username = QtWidgets.QLineEdit()
-        self.usernameString = QtWidgets.QLabel("Kullanıcı Adı")
-        self.passwordString = QtWidgets.QLabel("Şifre")
+        self.usernameString = QtWidgets.QLabel("Username")
+        self.passwordString = QtWidgets.QLabel("Password")
         self.password = QtWidgets.QLineEdit()
         self.password.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.loginButton = QtWidgets.QPushButton("Giriş Yap")
-        self.regButton = QtWidgets.QPushButton("Kayıt Ol")
+        self.loginButton = QtWidgets.QPushButton("Sign in")
+        self.regButton = QtWidgets.QPushButton("Register")
 
         controlh_box = QtWidgets.QHBoxLayout()
         controlh_box.addWidget(self.usernameString)
@@ -68,10 +68,10 @@ class UserControlWindow(QtWidgets.QWidget):
         data = self.cursor.fetchall()
 
         if len(data) == 0:
-            self.warning.setText("Kullanıcı adı veya şifre yanlış.")
+            self.warning.setText("Username or password is incorrect.")
         else:
             self.mainWindow = MainWindow(isim)
-            self.warning.setText("Giriş yapıldı.")
+            self.warning.setText("Signed in successfully")
             self.mainWindow.resetSpaces()
             self.mainWindow.show()
             self.close()
@@ -81,7 +81,7 @@ class UserControlWindow(QtWidgets.QWidget):
         parola = self.password.text()
 
         if isim == "" or parola == "":
-            self.warning.setText("İsim ve Şifre alanı boş bırakılamaz!")
+            self.warning.setText("Name and Password fields cannot be left blank!")
             return False
 
         self.cursor.execute("SELECT * FROM Users WHERE UserName = ? AND Password = ?",(isim,parola))
@@ -90,9 +90,9 @@ class UserControlWindow(QtWidgets.QWidget):
         if len(data) == 0:
             self.cursor.execute("INSERT INTO Users VALUES(?, ?)", (isim, parola))
             self.connection.commit()
-            self.warning.setText("Kayıt başarılı")
+            self.warning.setText("Registration Successful")
         else:
-            self.warning.setText("Böyle bir kullanıcı var.")
+            self.warning.setText("Such a user already exists")
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, user):
@@ -103,7 +103,7 @@ class MainWindow(QtWidgets.QWidget):
     
     def start_connection(self,user):
         if user == None:
-            print("User yok")
+            print("User is not exists")
         else:
             self.connection = sqlite3.connect("passwordDatabase.db")
             self.cursor = self.connection.cursor()
@@ -167,24 +167,12 @@ class MainWindow(QtWidgets.QWidget):
         self.secondWindow.show()
         self.hide()
 
-    def searchPassword(self):
-        isim = self.name.text()
-        self.start_connection(self.user)
-
-        self.cursor.execute(f"SELECT * FROM {self.user} WHERE Name = ?", (isim,))
-        data = self.cursor.fetchall()
-
-        if len(data) == 0:
-            self.answer.setText("Böyle bir şifre kaydetmemişsiniz.")
-        else:
-            self.answer.setText(f"Şifre: {data[0][1]}")
-
     def addPassword(self):
         isim = self.name.text()
         parola = self.passw.text()
 
         if isim == "" or parola == "":
-            self.answer.setText("İsim ve Şifre alanı boş bırakılamaz!")
+            self.answer.setText("Name and Password fields cannot be left blank!")
             return False
 
         self.start_connection(self.user)
@@ -195,9 +183,9 @@ class MainWindow(QtWidgets.QWidget):
         if len(data) == 0:
             self.cursor.execute(f"INSERT INTO {self.user} VALUES(?, ?)", (isim, parola))
             self.connection.commit()
-            self.answer.setText("Kayıt başarılı!")
+            self.answer.setText("Registration Successful!")
         else:
-            self.answer.setText("Daha önceden kaydedilmiş şifre!")
+            self.answer.setText("This password has already been saved.")
     
     def resetSpaces(self):
         self.name.setText("")
