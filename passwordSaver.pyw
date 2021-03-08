@@ -185,7 +185,12 @@ class MainWindow(QtWidgets.QWidget):
             self.connection.commit()
             self.answer.setText("Registration Successful!")
         else:
-            self.answer.setText("This password has already been saved.")
+            if self.editMode:
+                self.cursor.execute(f"UPDATE {self.user} SET Password = ? WHERE Name = ?", (parola, isim))
+                self.connection.commit()
+                self.answer.setText("Password updated successfully")
+            else:
+                self.answer.setText("This password has already been saved!")
     
     def resetSpaces(self):
         self.name.setText("")
@@ -195,6 +200,9 @@ class MainWindow(QtWidgets.QWidget):
     def setSpaces(self, name, passw):
         self.name.setText(name)
         self.passw.setText(passw)
+        
+    def setEditMode(self, editMode):
+        self.editMode = editMode
     
 class AllPasswordsWindow(QtWidgets.QWidget):
 
@@ -295,6 +303,7 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             data = self.cursor.fetchall()
             self.editWindow = MainWindow(self.user)
             self.editWindow.setSpaces(data[0][0], data[0][1])
+            self.editWindow.setEditMode(editMode=True)
             self.editWindow.show()
             self.hide()
         else:
