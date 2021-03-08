@@ -1,4 +1,4 @@
-# PyPassword
+# PyPassKeeper
 Password keeper with random password generator.
 # Requirements
 - PyQt5
