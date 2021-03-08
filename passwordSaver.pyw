@@ -122,6 +122,7 @@ class MainWindow(QtWidgets.QWidget):
         self.answer = QtWidgets.QLabel("")
         self.savepass = QtWidgets.QPushButton("Save")
         self.allpassw = QtWidgets.QPushButton("My Passwords")
+        self.generatorButton = QtWidgets.QPushButton("Generate Random Password")
 
         mainH_box2 = QtWidgets.QHBoxLayout()
         mainH_box2.addStretch()
@@ -138,6 +139,7 @@ class MainWindow(QtWidgets.QWidget):
         mainV_box.addStretch()
         mainV_box.addWidget(self.savepass)
         mainV_box.addWidget(self.allpassw)
+        mainV_box.addWidget(self.generatorButton)
 
         mainH_box = QtWidgets.QHBoxLayout()
         mainH_box.addLayout(mainV_box)
@@ -146,13 +148,20 @@ class MainWindow(QtWidgets.QWidget):
 
         self.savepass.clicked.connect(self.addPassword)
         self.allpassw.clicked.connect(self.allPasswords)
+        self.generatorButton.clicked.connect(self.passwordGenerator)
 
         self.setWindowTitle("Main Window")
-        self.setMinimumHeight(200)
-        self.setMaximumHeight(200)
+        self.setMinimumHeight(230)
+        self.setMaximumHeight(230)
         self.setMinimumWidth(250)
         self.setMaximumWidth(250)
     
+    def passwordGenerator(self):
+        from extras import passwordGenerator
+        randomPassword = passwordGenerator.main()
+        self.answer.setText(f"Random password: {randomPassword}")
+        self.passw.setText(randomPassword)
+
     def allPasswords(self):
         self.secondWindow = AllPasswordsWindow(self.user)
         self.secondWindow.show()
@@ -316,10 +325,10 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             self.passList.repaint()
         else:
             return False
-        
+    
     def closeEvent(self, event):
         self.mainWindow = MainWindow(self.user)
-        self.mainWindow.show()
+        self.mainWindow.show() 
 
 class ShowPasswordsWindow(QtWidgets.QWidget):
 
