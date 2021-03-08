@@ -1,5 +1,5 @@
 # PyPassword
-Password saver.
+Password keeper with random password generator.
 # Requirements
 - PyQt5
 - PyQt5-tools
