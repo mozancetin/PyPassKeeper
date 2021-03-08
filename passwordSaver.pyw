@@ -97,8 +97,8 @@ class UserControlWindow(QtWidgets.QWidget):
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, user):
         super().__init__()
+        self.editMode = False
         self.user = user
-
         self.init_ui()
     
     def start_connection(self,user):
