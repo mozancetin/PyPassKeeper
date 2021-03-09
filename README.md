@@ -10,7 +10,7 @@ pip install pyqt5-tools
 pip install pyperclip
 ```
 # Features
-Let the program store your passwords. Now you only need to remember 1 password and that is the password of this program haha!
+
 1. You can save your passwords.
 <br> <br>
 ![](menu.png)
@@ -27,4 +27,4 @@ Let the program store your passwords. Now you only need to remember 1 password a
 <br> <br>
 ![](showpassword.png)
 
-5. It's that simple! 
+5. It's that simple! Now let the program store your passwords. You only need to remember 1 password and that is the password of this program haha!
