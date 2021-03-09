@@ -13,18 +13,18 @@ pip install pyperclip
 
 1. You can save your passwords.
 <br> <br>
-![](menu.png)
+![](/images/menu.png)
 
 2. You can categorize your passwords and you can see them in categories
 <br> <br>
-![](categories.png)
+![](/images/categories.png)
 
 3. If you want, you can view all your passwords in one place.
 <br> <br>
-![](image2.png)
+![](/images/image2.png)
 
 4. And whenever you want, find your saved password in four clicks.
 <br> <br>
-![](showpassword.png)
+![](/images/showpassword.png)
 
 5. It's that simple! Now let the program store your passwords. You only need to remember **one password** and that is the password of this program haha!
