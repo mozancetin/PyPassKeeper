@@ -27,4 +27,4 @@ pip install pyperclip
 <br> <br>
 ![](showpassword.png)
 
-5. It's that simple! Now let the program store your passwords. You only need to remember 1 password and that is the password of this program haha!
+5. It's that simple! Now let the program store your passwords. You only need to remember **one password** and that is the password of this program haha!
