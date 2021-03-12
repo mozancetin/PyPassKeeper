@@ -1,7 +1,9 @@
 from PyQt5 import QtWidgets
+from PyQt5 import QtGui
 import pyperclip
 import sqlite3
 import sys
+
 
 class UserControlWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -53,6 +55,7 @@ class UserControlWindow(QtWidgets.QWidget):
         self.loginButton.clicked.connect(self.Login)
         self.regButton.clicked.connect(self.Register)
         self.setWindowTitle("Login")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(150)
         self.setMaximumHeight(150)
         self.setMinimumWidth(250)
@@ -180,6 +183,7 @@ class MainWindow(QtWidgets.QWidget):
         self.categories.clicked.connect(self.allCategories)
 
         self.setWindowTitle("Main Window")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(260)
         self.setMaximumHeight(260)
         self.setMinimumWidth(250)
@@ -305,6 +309,7 @@ class AllPasswordsWindow(QtWidgets.QWidget):
 
         self.setLayout(passV_box)
         self.setWindowTitle("My Passwords")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(300)
         self.setMaximumHeight(500)
         self.setMinimumWidth(400)
@@ -494,6 +499,7 @@ class CategoriesWindow(QtWidgets.QWidget):
 
         self.setLayout(catV_box)
         self.setWindowTitle("Categories")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(300)
         self.setMaximumHeight(500)
         self.setMinimumWidth(400)
@@ -654,6 +660,7 @@ class EditCategoryWindow(QtWidgets.QWidget):
 
         self.setLayout(editV_box)
         self.setWindowTitle(f"{self.item_name}")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(100)
         self.setMaximumHeight(100)
         self.setMinimumWidth(250)
@@ -710,7 +717,7 @@ class ShowPasswordsWindow(QtWidgets.QWidget):
         self.setWindowTitle(self.program_name)
 
         self.copyButton.clicked.connect(self.CopyPassword)
-
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
         self.setMinimumHeight(170)
         self.setMaximumHeight(170)
         self.setMinimumWidth(300)
