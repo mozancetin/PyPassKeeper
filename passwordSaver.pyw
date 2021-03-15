@@ -138,6 +138,8 @@ class MainWindow(QtWidgets.QWidget):
         self.allpassw = QtWidgets.QPushButton("All Passwords")
         self.categories = QtWidgets.QPushButton("Categories")
         self.generatorButton = QtWidgets.QPushButton("Generate Random Password")
+        self.importButton = QtWidgets.QPushButton("Import")
+        self.exportButton = QtWidgets.QPushButton("Export")
         self.combo_Box = QtWidgets.QComboBox()
 
         self.start_connection(self.user)
@@ -148,6 +150,10 @@ class MainWindow(QtWidgets.QWidget):
         index = self.combo_Box.findText("Uncategorized")
         if index >= 0:
             self.combo_Box.setCurrentIndex(index)
+
+        mainH_box4 = QtWidgets.QHBoxLayout()
+        mainH_box4.addWidget(self.importButton)
+        mainH_box4.addWidget(self.exportButton)
 
         mainH_box3 = QtWidgets.QHBoxLayout()
         mainH_box3.addWidget(self.categories)
@@ -171,6 +177,7 @@ class MainWindow(QtWidgets.QWidget):
         mainV_box.addWidget(self.savepass)
         mainV_box.addLayout(mainH_box3)
         mainV_box.addWidget(self.generatorButton)
+        mainV_box.addLayout(mainH_box4)
 
         mainH_box = QtWidgets.QHBoxLayout()
         mainH_box.addLayout(mainV_box)
@@ -181,14 +188,26 @@ class MainWindow(QtWidgets.QWidget):
         self.allpassw.clicked.connect(self.allPasswords)
         self.generatorButton.clicked.connect(self.passwordGenerator)
         self.categories.clicked.connect(self.allCategories)
+        self.importButton.clicked.connect(self.importFunc)
+        self.exportButton.clicked.connect(self.exportFunc)
 
-        self.setWindowTitle("Main Window")
+        self.setWindowTitle("Main Menu")
         self.setWindowIcon(QtGui.QIcon('lock.ico'))
-        self.setMinimumHeight(260)
-        self.setMaximumHeight(260)
+        self.setMinimumHeight(300)
+        self.setMaximumHeight(300)
         self.setMinimumWidth(250)
         self.setMaximumWidth(250)
     
+    def importFunc(self):
+        self.importDataWindow = ImportWindow(self.user)
+        self.importDataWindow.show()
+        self.hide()
+
+    def exportFunc(self):
+        self.exportDataWindow = ExportWindow(self.user)
+        self.exportDataWindow.show()
+        self.hide()
+
     def allCategories(self):
         self.thirdWindow = CategoriesWindow(self.user)
         self.thirdWindow.show()
@@ -730,6 +749,119 @@ class ShowPasswordsWindow(QtWidgets.QWidget):
     def closeEvent(self, event):
         self.mainWindow = MainWindow(self.user)
         self.mainWindow.show()        
+
+class ExportWindow(QtWidgets.QWidget):
+
+    def __init__(self, user):
+        super().__init__()
+        self.user = user
+        self.export_ui()
+    
+    def export_ui(self):
+        self.findPath = QtWidgets.QPushButton("Find Path")
+        self.export = QtWidgets.QPushButton("Export")
+        self.export.setEnabled(False)
+        self.path = QtWidgets.QLineEdit()
+        self.path.setReadOnly(True)
+
+        H_Box = QtWidgets.QHBoxLayout()
+        H_Box.addWidget(self.path)
+        H_Box.addWidget(self.findPath)
+
+        H_Box2 = QtWidgets.QHBoxLayout()
+        H_Box2.addStretch()
+        H_Box2.addWidget(self.export)
+        H_Box2.addStretch()
+
+        V_Box = QtWidgets.QVBoxLayout()
+        V_Box.addStretch()
+        V_Box.addLayout(H_Box)
+        V_Box.addLayout(H_Box2)
+        V_Box.addStretch()
+
+        self.findPath.clicked.connect(self.findPathButton)
+        self.export.clicked.connect(self.exportButtonFunc)
+
+        self.setLayout(V_Box)
+        self.setWindowTitle("Export")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
+        self.setMinimumHeight(100)
+        self.setMaximumHeight(100)
+        self.setMinimumWidth(400)
+        self.setMaximumWidth(400)
+    
+    def findPathButton(self):
+        import os
+        self.file_path = QtWidgets.QFileDialog.getSaveFileName(self, "Export", os.getenv("DESKTOP"), "JSON File (*.json)")
+        self.path.setText(self.file_path[0])
+        self.export.setEnabled(True)
+
+    def exportButtonFunc(self):
+        from extras import impExpJSON
+        impExpJSON.exportData(self.file_path[0])
+        self.path.setText("Exported successfully")
+        self.export.setEnabled(False)
+
+    def closeEvent(self, event):
+        self.mainWindow = MainWindow(self.user)
+        self.mainWindow.show()   
+
+class ImportWindow(QtWidgets.QWidget):
+
+    def __init__(self, user):
+        super().__init__()
+        self.user = user
+        self.import_ui()
+
+    def import_ui(self):
+        self.findImportPath = QtWidgets.QPushButton("Find Path")
+        self.importBtn = QtWidgets.QPushButton("Import")
+        self.importBtn.setEnabled(False)
+        self.importPath = QtWidgets.QLineEdit()
+        self.importPath.setReadOnly(True)
+
+        iH_Box = QtWidgets.QHBoxLayout()
+        iH_Box.addWidget(self.importPath)
+        iH_Box.addWidget(self.findImportPath)
+
+        iH_Box2 = QtWidgets.QHBoxLayout()
+        iH_Box2.addStretch()
+        iH_Box2.addWidget(self.importBtn)
+        iH_Box2.addStretch()
+
+        iV_Box = QtWidgets.QVBoxLayout()
+        iV_Box.addStretch()
+        iV_Box.addLayout(iH_Box)
+        iV_Box.addLayout(iH_Box2)
+        iV_Box.addStretch()
+
+        self.findImportPath.clicked.connect(self.findImportPathButton)
+        self.importBtn.clicked.connect(self.importButtonFunc)
+
+        self.setLayout(iV_Box)
+        self.setWindowTitle("Import")
+        self.setWindowIcon(QtGui.QIcon('lock.ico'))
+        self.setMinimumHeight(100)
+        self.setMaximumHeight(100)
+        self.setMinimumWidth(400)
+        self.setMaximumWidth(400)
+    
+    def findImportPathButton(self):
+        import os
+        self.importFilePath = QtWidgets.QFileDialog.getOpenFileName(self, "Select a JSON File", os.getenv("DESKTOP"), "JSON File (*.json)")
+        self.importPath.setText(self.importFilePath[0])
+        self.importBtn.setEnabled(True)
+
+    def importButtonFunc(self):
+        from extras import impExpJSON
+        impExpJSON.importData(self.importFilePath[0])
+        self.importPath.setText("Imported successfully")
+        self.importBtn.setEnabled(False)
+
+    def closeEvent(self, event):
+        self.mainWindow = MainWindow(self.user)
+        self.mainWindow.show()   
+
 
 app = QtWidgets.QApplication(sys.argv)
 pencere = UserControlWindow()
