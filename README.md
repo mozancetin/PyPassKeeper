@@ -4,10 +4,12 @@ Password keeper with random password generator.
 - PyQt5
 - PyQt5-tools
 - pyperclip
+- passlib
 ```
 pip install pyqt5
 pip install pyqt5-tools
 pip install pyperclip
+pip install passlib
 ```
 # Features
 
