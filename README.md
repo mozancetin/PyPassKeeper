@@ -34,4 +34,4 @@ pip install passlib
 6. It's that simple! Now let the program store your passwords. You only need to remember **one password** and that is the password of this program haha!
 
 # TODO'S
-- Sha256 encryption method will be added for passwords
+
