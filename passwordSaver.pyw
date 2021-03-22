@@ -1,3 +1,4 @@
+from extras import my_encryption as me
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 import pyperclip
@@ -67,17 +68,20 @@ class UserControlWindow(QtWidgets.QWidget):
         isim = self.username.text()
         parola = self.password.text()
 
-        self.cursor.execute("SELECT * FROM Users WHERE UserName = ? AND Password = ?",(isim,parola))
+        self.cursor.execute("SELECT Password FROM Users WHERE UserName = ?",(isim,))
         data = self.cursor.fetchall()
 
         if len(data) == 0:
-            self.warning.setText("Username or password is incorrect.")
+            self.warning.setText("This user doesn't exists.")
         else:
-            self.mainWindow = MainWindow(isim)
-            self.warning.setText("Signed in successfully")
-            self.mainWindow.resetSpaces()
-            self.mainWindow.show()
-            self.close()
+            if parola == me.Decrypt(data[0][0]):
+                self.mainWindow = MainWindow(isim)
+                self.warning.setText("Signed in successfully")
+                self.mainWindow.resetSpaces()
+                self.mainWindow.show()
+                self.close()
+            else:
+                self.warning.setText("Password is incorrect.")
     
     def Register(self):
         isim = self.username.text()
@@ -87,10 +91,11 @@ class UserControlWindow(QtWidgets.QWidget):
             self.warning.setText("Name and Password fields cannot be left blank!")
             return False
 
-        self.cursor.execute("SELECT * FROM Users WHERE UserName = ? AND Password = ?",(isim,parola))
+        self.cursor.execute("SELECT * FROM Users WHERE UserName = ?",(isim,))
         data = self.cursor.fetchall()
 
         if len(data) == 0:
+            parola = me.Encrypt(parola)
             self.cursor.execute("INSERT INTO Users VALUES(?, ?)", (isim, parola))
             self.connection.commit()
             self.warning.setText("Registration Successful")
@@ -238,14 +243,14 @@ class MainWindow(QtWidgets.QWidget):
 
         self.cursor.execute(f"SELECT * FROM {self.user} WHERE Name = ?", (isim,))
         data = self.cursor.fetchall()
-
+        parola = me.Encrypt(parola)
         if len(data) == 0:
             self.cursor.execute(f"INSERT INTO {self.user} VALUES(?, ?, ?)", (isim, parola, category))
             self.connection.commit()
             self.answer.setText("Registration Successful!")
         else:
             if self.editMode:
-                self.cursor.execute(f"UPDATE {self.user} SET Password = ? WHERE Name = ?", (parola, isim))
+                self.cursor.execute(f"UPDATE {self.user} SET Password = ? , Category = ? WHERE Name = ?", (parola, category, isim))
                 self.connection.commit()
                 self.answer.setText("Password updated successfully")
             else:
@@ -259,6 +264,11 @@ class MainWindow(QtWidgets.QWidget):
     def setSpaces(self, name, passw):
         self.name.setText(name)
         self.passw.setText(passw)
+    
+    def setCategoryForEdit(self, category_name):
+        index = self.combo_Box.findText(category_name)
+        if index >= 0:
+            self.combo_Box.setCurrentIndex(index)
         
     def setEditMode(self, editMode):
         self.editMode = editMode
@@ -340,7 +350,6 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             self.cursor.execute(f"SELECT Category FROM {self.user} WHERE Name = ?", (item,))
             data = self.cursor.fetchone()
             category = data[0]
-            print(category)
             self.chCategoryWindow = EditCategoryWindow(self.user, item, category)
             self.chCategoryWindow.show()
             self.hide()
@@ -380,7 +389,7 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             item = self.passList.currentItem().text()
             self.cursor.execute(f"SELECT * FROM {self.user} WHERE Name = ?", (item,))
             data = self.cursor.fetchall()
-            self.showWindow = ShowPasswordsWindow(data[0][0], data[0][1], self.user)
+            self.showWindow = ShowPasswordsWindow(data[0][0], me.Decrypt(data[0][1]), self.user)
             self.showWindow.show()
             self.hide()
         else:
@@ -389,7 +398,7 @@ class AllPasswordsWindow(QtWidgets.QWidget):
     def showPassword_dc(self, item):
         self.cursor.execute(f"SELECT * FROM {self.user} WHERE Name = ?", (item.text(),))
         data = self.cursor.fetchall()
-        self.showWindow = ShowPasswordsWindow(data[0][0], data[0][1], self.user)
+        self.showWindow = ShowPasswordsWindow(data[0][0], me.Decrypt(data[0][1]), self.user)
         self.showWindow.show()
         self.hide()
 
@@ -399,7 +408,8 @@ class AllPasswordsWindow(QtWidgets.QWidget):
             self.cursor.execute(f"SELECT * FROM {self.user} WHERE Name = ?", (item,))
             data = self.cursor.fetchall()
             self.editWindow = MainWindow(self.user)
-            self.editWindow.setSpaces(data[0][0], data[0][1])
+            self.editWindow.setSpaces(data[0][0], me.Decrypt(data[0][1]))
+            self.editWindow.setCategoryForEdit(data[0][2])
             self.editWindow.setEditMode(editMode=True)
             self.editWindow.show()
             self.hide()
